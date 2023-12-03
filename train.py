@@ -14,23 +14,6 @@ from segment_anything.utils.transforms import ResizeLongestSide
 import torch.nn.functional as F
 
 
-sam_args = {
-    'sam_checkpoint': "cp/sam_vit_h.pth",
-    'model_type': "vit_h",
-    'generator_args':{
-        'points_per_side': 8,
-        'pred_iou_thresh': 0.95,
-        'stability_score_thresh': 0.7,
-        'crop_n_layers': 0,
-        'crop_n_points_downscale_factor': 2,
-        'min_mask_region_area': 0,
-        'point_grids': None,
-        'box_nms_thresh': 0.7,
-    },
-    'gpu_id': 0,
-}
-
-
 def norm_batch(x):
     bs = x.shape[0]
     Isize = x.shape[-1]
@@ -182,25 +165,20 @@ def sam_call(batched_input, sam, dense_embeddings):
     return low_res_masks
 
 
-def main(args=None):
-    gpu_num = torch.cuda.device_count()
+def main(args=None, sam_args=None):
     model = ModelEmb(args=args).cuda()
-    model1 = torch.load('results/gpu44/net_best.pth')
-    model.backbone.load_state_dict(model1.backbone.state_dict())
     sam = sam_model_registry[sam_args['model_type']](checkpoint=sam_args['sam_checkpoint'])
     sam.to(device=torch.device('cuda', sam_args['gpu_id']))
     transform = ResizeLongestSide(sam.image_encoder.img_size)
     optimizer = optim.Adam(model.parameters(),
                            lr=float(args['learning_rate']),
                            weight_decay=float(args['WD']))
-
     if args['task'] == 'monu':
         trainset, testset = get_monu_dataset(args, sam_trans=transform)
     elif args['task'] == 'glas':
         trainset, testset = get_glas_dataset(sam_trans=transform)
     elif args['task'] == 'polyp':
         trainset, testset = get_polyp_dataset(args, sam_trans=transform)
-
     ds = torch.utils.data.DataLoader(trainset, batch_size=int(args['Batch_size']), shuffle=True,
                                      num_workers=int(args['nW']), drop_last=True)
     ds_val = torch.utils.data.DataLoader(testset, batch_size=1, shuffle=False,
@@ -248,5 +226,20 @@ if __name__ == '__main__':
                                      'net_best.pth')
     args['vis_folder'] = os.path.join('results', 'gpu' + args['folder'], 'vis')
     os.mkdir(args['vis_folder'])
-    main(args=args)
+    sam_args = {
+        'sam_checkpoint': "cp/sam_vit_h.pth",
+        'model_type': "vit_h",
+        'generator_args': {
+            'points_per_side': 8,
+            'pred_iou_thresh': 0.95,
+            'stability_score_thresh': 0.7,
+            'crop_n_layers': 0,
+            'crop_n_points_downscale_factor': 2,
+            'min_mask_region_area': 0,
+            'point_grids': None,
+            'box_nms_thresh': 0.7,
+        },
+        'gpu_id': 0,
+    }
+    main(args=args, sam_args=sam_args)
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData">
+  <component name="PublishConfigData" autoUpload="Always" serverName="talshah@rack-wolf-g02.cs.tau.ac.il:22">
     <serverData>
       <paths name="Nartis1">
         <serverdata>
@@ -47,7 +47,7 @@
       <paths name="talshah@rack-wolf-g02.cs.tau.ac.il:22">
         <serverdata>
           <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/media/media1/talshah/AutoSam" local="$PROJECT_DIR$" web="/" />
           </mappings>
         </serverdata>
       </paths>
@@ -73,5 +73,6 @@
         </serverdata>
       </paths>
     </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>
