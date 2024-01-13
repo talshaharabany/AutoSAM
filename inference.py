@@ -54,16 +54,6 @@ def inference_ds(ds, model, sam, transform, epoch, args):
         masks[masks <= 0.5] = 0
         dice, ji = get_dice_ji(masks.squeeze().detach().cpu().numpy(),
                                gts.squeeze().detach().cpu().numpy())
-        # orig_imgs_small = sam.postprocess_masks(orig_imgs_small, input_size=input_size, original_size=original_size)
-        # orig_imgs_small = F.interpolate(orig_imgs_small, (Idim, Idim), mode='nearest')
-        # orig_imgs_small = orig_imgs_small.squeeze().permute(1, 2, 0)
-        # orig_imgs_small = (orig_imgs_small - orig_imgs_small.min()) / (orig_imgs_small.max() - orig_imgs_small.min())
-        # cv2.imwrite(os.path.join(args['vis_folder'], 'img_' + str(ix) + '.jpg'),
-        #             255 * orig_imgs_small.detach().cpu().numpy())
-        # cv2.imwrite(os.path.join(args['vis_folder'], 'mask_' + str(ix) + '.jpg'),
-        #             255*masks.squeeze().detach().cpu().numpy())
-        # cv2.imwrite(os.path.join(args['vis_folder'], 'gt_' + str(ix) + '.jpg'),
-        #             255*gts.squeeze().detach().cpu().numpy())
         iou_list.append(ji)
         dice_list.append(dice)
         pbar.set_description(

@@ -59,7 +59,7 @@ class ImageLoader(torch.utils.data.Dataset):
 
 
 def get_monu_dataset(args, sam_trans):
-    datadir = '/home/tal/Medical/MoNuSeg'
+    datadir = 'MoNuSeg'
     transform_train, transform_test = get_monu_transform(args)
     ds_train = ImageLoader(datadir, train=True, transform=transform_train, sam_trans=sam_trans, loops=5)
     ds_test = ImageLoader(datadir, train=False, transform=transform_test, sam_trans=sam_trans)

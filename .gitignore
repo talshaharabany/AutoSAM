@@ -1,0 +1,9 @@
+*.pyc
+*.pth
+*.jpg
+*.png
+*.tif
+*.csv
+*.bmp
+*.zip
+*.DS_Store

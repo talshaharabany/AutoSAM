@@ -61,9 +61,9 @@ class SmallDecoder(nn.Module):
     def __init__(self, full_features, out):
         super(SmallDecoder, self).__init__()
         self.up1 = UpBlockSkip(full_features[3] + full_features[2], full_features[2],
-                               func='relu', drop=0).cuda()
+                               func='relu', drop=0)
         self.up2 = UpBlockSkip(full_features[2] + full_features[1], full_features[1],
-                               func='relu', drop=0).cuda()
+                               func='relu', drop=0)
         self.final = CNNBlock(full_features[1], out, kernel_size=3, drop=0)
 
     def forward(self, x):

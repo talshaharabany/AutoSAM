@@ -166,9 +166,13 @@ def sam_call(batched_input, sam, dense_embeddings):
 
 
 def main(args=None, sam_args=None):
-    model = ModelEmb(args=args).cuda()
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+    model = ModelEmb(args=args).to(device)
     sam = sam_model_registry[sam_args['model_type']](checkpoint=sam_args['sam_checkpoint'])
-    sam.to(device=torch.device('cuda', sam_args['gpu_id']))
+    sam.to(device=device)
     transform = ResizeLongestSide(sam.image_encoder.img_size)
     optimizer = optim.Adam(model.parameters(),
                            lr=float(args['learning_rate']),
@@ -176,7 +180,7 @@ def main(args=None, sam_args=None):
     if args['task'] == 'monu':
         trainset, testset = get_monu_dataset(args, sam_trans=transform)
     elif args['task'] == 'glas':
-        trainset, testset = get_glas_dataset(sam_trans=transform)
+        trainset, testset = get_glas_dataset(args, sam_trans=transform)
     elif args['task'] == 'polyp':
         trainset, testset = get_polyp_dataset(args, sam_trans=transform)
     ds = torch.utils.data.DataLoader(trainset, batch_size=int(args['Batch_size']), shuffle=True,
@@ -207,7 +211,7 @@ if __name__ == '__main__':
     parser.add_argument('-nW', '--nW', default=0, help='evaluation iteration', required=False)
     parser.add_argument('-nW_eval', '--nW_eval', default=0, help='evaluation iteration', required=False)
     parser.add_argument('-WD', '--WD', default=1e-4, help='evaluation iteration', required=False)
-    parser.add_argument('-task', '--task', default='polyp', help='evaluation iteration', required=False)
+    parser.add_argument('-task', '--task', default='glas', help='evaluation iteration', required=False)
     parser.add_argument('-depth_wise', '--depth_wise', default=False, help='image size', required=False)
     parser.add_argument('-order', '--order', default=85, help='image size', required=False)
     parser.add_argument('-Idim', '--Idim', default=512, help='image size', required=False)

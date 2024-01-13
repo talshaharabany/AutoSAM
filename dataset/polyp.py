@@ -96,35 +96,31 @@ class PolypDataset(data.Dataset):
 
 def get_polyp_dataset(args, sam_trans=None):
     transform_train, transform_test = get_polyp_transform()
-    image_root = '/home/tal/Medical/polyp/TrainDataset/images/'
-    gt_root = '/home/tal/Medical/polyp/TrainDataset/masks/'
+    image_root = 'polyp/TrainDataset/images/'
+    gt_root = 'polyp/TrainDataset/masks/'
     ds_train = PolypDataset(image_root, gt_root, augmentations=transform_train, sam_trans=sam_trans)
-    image_root = '/home/tal/Medical/polyp/TestDataset/test/images/'
-    gt_root = '/home/tal/Medical/polyp/TestDataset/test/masks/'
+    image_root = 'polyp/TestDataset/test/images/'
+    gt_root = 'polyp/TestDataset/test/masks/'
     ds_test = PolypDataset(image_root, gt_root, train=False, augmentations=transform_test, sam_trans=sam_trans)
     return ds_train, ds_test
 
 
 def get_tests_polyp_dataset(sam_trans):
     transform_train, transform_test = get_polyp_transform()
-    # image_root = '/home/tal/Medical/polyp/TestDataset/CVC-300/images/'
-    # gt_root = '/home/tal/Medical/polyp/TestDataset/CVC-300/masks/'
-    # ds_300 = PolypDataset(image_root, gt_root, augmentations=transform_test, train=False, sam_trans=sam_trans)
-
-    image_root = '/home/tal/Medical/polyp/TestDataset/Kvasir/images/'
-    gt_root = '/home/tal/Medical/polyp/TestDataset/Kvasir/masks/'
+    image_root = 'polyp/TestDataset/Kvasir/images/'
+    gt_root = 'polyp/TestDataset/Kvasir/masks/'
     ds_Kvasir = PolypDataset(image_root, gt_root, augmentations=transform_test, train=False, sam_trans=sam_trans)
 
-    image_root = '/home/tal/Medical/polyp/TestDataset/CVC-ClinicDB/images/'
-    gt_root = '/home/tal/Medical/polyp/TestDataset/CVC-ClinicDB/masks/'
+    image_root = 'polyp/TestDataset/CVC-ClinicDB/images/'
+    gt_root = 'polyp/TestDataset/CVC-ClinicDB/masks/'
     ds_ClinicDB = PolypDataset(image_root, gt_root, augmentations=transform_test, train=False, sam_trans=sam_trans)
 
-    image_root = '/home/tal/Medical/polyp/TestDataset/CVC-ColonDB/images/'
-    gt_root = '/home/tal/Medical/polyp/TestDataset/CVC-ColonDB/masks/'
+    image_root = 'polyp/TestDataset/CVC-ColonDB/images/'
+    gt_root = 'polyp/TestDataset/CVC-ColonDB/masks/'
     ds_ColonDB = PolypDataset(image_root, gt_root, augmentations=transform_test, train=False, sam_trans=sam_trans)
 
-    image_root = '/home/tal/Medical/polyp/TestDataset/ETIS-LaribPolypDB/images/'
-    gt_root = '/home/tal/Medical/polyp/TestDataset/ETIS-LaribPolypDB/masks/'
+    image_root = 'polyp/TestDataset/ETIS-LaribPolypDB/images/'
+    gt_root = 'polyp/TestDataset/ETIS-LaribPolypDB/masks/'
     ds_ETIS = PolypDataset(image_root, gt_root, augmentations=transform_test, train=False, sam_trans=sam_trans)
 
     return ds_Kvasir, ds_ClinicDB, ds_ColonDB, ds_ETIS

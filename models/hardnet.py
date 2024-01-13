@@ -219,7 +219,9 @@ class HarDNet(nn.Module):
                 else:
                     checkpoint = 'https://ping-chao.com/hardnet/hardnet39ds-0e6c6fa9.pth'
 
-                self.load_state_dict(torch.hub.load_state_dict_from_url(checkpoint, progress=False))
+                device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+                self.load_state_dict(torch.hub.load_state_dict_from_url(checkpoint, progress=False, map_location=device))
+
             else:
                 postfix = 'ds' if depth_wise else ''
                 weight_file = '%shardnet%d%s.pth' % (weight_path, arch, postfix)
