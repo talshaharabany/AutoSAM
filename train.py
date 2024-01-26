@@ -206,7 +206,7 @@ if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description='Description of your program')
     parser.add_argument('-lr', '--learning_rate', default=0.0003, help='learning_rate', required=False)
-    parser.add_argument('-bs', '--Batch_size', default=3, help='batch_size', required=False)
+    parser.add_argument('-bs', '--Batch_size', default=2, help='batch_size', required=False)
     parser.add_argument('-epoches', '--epoches', default=5000, help='number of epoches', required=False)
     parser.add_argument('-nW', '--nW', default=0, help='evaluation iteration', required=False)
     parser.add_argument('-nW_eval', '--nW_eval', default=0, help='evaluation iteration', required=False)
@@ -231,8 +231,8 @@ if __name__ == '__main__':
     args['vis_folder'] = os.path.join('results', 'gpu' + args['folder'], 'vis')
     os.mkdir(args['vis_folder'])
     sam_args = {
-        'sam_checkpoint': "cp/sam_vit_h.pth",
-        'model_type': "vit_h",
+        'sam_checkpoint': "cp/sam_vit_b.pth",
+        'model_type': "vit_b",
         'generator_args': {
             'points_per_side': 8,
             'pred_iou_thresh': 0.95,
