@@ -8,3 +8,4 @@
 *.zip
 *.DS_Store
 *.jpeg
+.venv/

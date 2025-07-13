@@ -20,6 +20,22 @@ class CNNBlock(nn.Module):
         x_out = self.conv2(x)
         return x_out
 
+class CNNBlock3D(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=3, drop=0):
+        super(CNNBlock3D, self).__init__()
+        P = int((kernel_size-1)/2)
+        self.conv1 = nn.Conv3d(in_channels, out_channels, kernel_size, stride=1, padding=P)
+        self.conv2 = nn.Conv3d(out_channels, out_channels, kernel_size, stride=1, padding=P)
+        self.conv1_drop = nn.Dropout3d(drop)
+        self.conv2_drop = nn.Dropout3d(drop)
+        self.BN1 = nn.BatchNorm3d(out_channels)
+        # self.BN2 = nn.BatchNorm3d(out_channels)
+
+    def forward(self, x_in, inx=-1):
+        x = self.conv1_drop(self.conv1(x_in))
+        x = F.relu(self.BN1(x))
+        x_out = self.conv2(x)
+        return x_out
 
 class UpBlockSkip(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size=3, func=None, drop=0):
@@ -46,6 +62,30 @@ class UpBlockSkip(nn.Module):
         else:
             return x1
 
+class UpBlockSkip3D(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size=3, func=None, drop=0):
+        super(UpBlockSkip3D, self).__init__()
+        P = int((kernel_size - 1) / 2)
+        self.Upsample = nn.Upsample(scale_factor=2, mode='trilinear', align_corners=True)
+        self.conv1 = nn.Conv3d(in_channels, out_channels, kernel_size, stride=1, padding=P)
+        self.conv1_drop = nn.Dropout3d(drop)
+        self.conv2 = nn.Conv3d(out_channels, out_channels, kernel_size, stride=1, padding=P)
+        self.conv2_drop = nn.Dropout3d(drop)
+        self.BN = nn.Identity()#nn.BatchNorm3d(out_channels)
+        self.func = func
+
+    def forward(self, x_in, x_up):
+        x = self.Upsample(x_in)
+        x_cat = torch.cat((x, x_up), 1)
+        x1 = self.conv2_drop(self.conv2(self.conv1_drop(self.conv1(x_cat))))
+        if self.func == 'tanh':
+            return F.tanh(self.BN(x1))
+        elif self.func == 'relu':
+            return F.leaky_relu(self.BN(x1))
+        elif self.func == 'sigmoid':
+            return F.sigmoid(self.BN(x1))
+        else:
+            return x1
 
 class UpBlock(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size=3, drop=0, func=None):
